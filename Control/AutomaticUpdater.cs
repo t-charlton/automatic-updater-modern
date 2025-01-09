@@ -38,7 +38,7 @@ namespace wyDay.Controls
 
         FailArgs failArgs;
 
-        ContextMenu contextMenu;
+        ContextMenuStrip contextMenu;
         MenuType CurrMenuType = MenuType.Nothing;
         bool isMenuVisible;
 
@@ -50,7 +50,7 @@ namespace wyDay.Controls
 
         // menu items
         ToolStripItem toolStripItem;
-        MenuItem menuItem;
+        ToolStripMenuItem menuItem;
 
         static readonly Bitmap BmpInfo = new Bitmap(typeof (AutomaticUpdater), "info.png");
         static readonly Bitmap BmpWorking = new Bitmap(typeof (AutomaticUpdater), "update-working.png");
@@ -226,7 +226,7 @@ namespace wyDay.Controls
         [Description("The MenuItem that will be used to check for updates."),
         Category("Updater"),
         DefaultValue(null)]
-        public MenuItem MenuItem
+        public ToolStripMenuItem MenuItem
         {
             get
             {
@@ -1037,9 +1037,9 @@ namespace wyDay.Controls
                 isMenuVisible = true;
 
                 if ((Anchor & AnchorStyles.Right) == AnchorStyles.Right)
-                    contextMenu.Show(this, new Point(Width, Height), LeftRightAlignment.Left);
+                    contextMenu.Show(this, new Point(Width, Height), ToolStripDropDownDirection.AboveLeft);
                 else
-                    contextMenu.Show(this, new Point(0, Height), LeftRightAlignment.Right);
+                    contextMenu.Show(this, new Point(0, Height), ToolStripDropDownDirection.AboveRight);
             }
         }
 
@@ -1198,7 +1198,7 @@ namespace wyDay.Controls
 
         void ViewChanges_Click(object sender, EventArgs e)
         {
-            using (frmChanges changeForm = new frmChanges(auBackend.Version, auBackend.RawChanges, auBackend.AreChangesRTF, ShowButtonUpdateNow, translation))
+            using (frmChanges changeForm = new(auBackend.Version, auBackend.RawChanges, auBackend.AreChangesRTF, ShowButtonUpdateNow, translation))
             {
                 changeForm.ShowDialog(ownerForm);
 
@@ -1209,7 +1209,7 @@ namespace wyDay.Controls
 
         void ViewError_Click(object sender, EventArgs e)
         {
-            using (frmError errorForm = new frmError(failArgs, translation))
+            using (frmError errorForm = new(failArgs, translation))
             {
                 errorForm.ShowDialog(ownerForm);
 
@@ -1249,28 +1249,28 @@ namespace wyDay.Controls
                 case MenuType.CancelDownloading:
                 case MenuType.CancelExtracting:
                 case MenuType.CheckingMenu:
-                    contextMenu.MenuItems[0].Click -= CancelUpdate_Click;
+                    contextMenu.Items[0].Click -= CancelUpdate_Click;
                     break;
 
                 case MenuType.InstallAndChanges:
                 case MenuType.DownloadAndChanges:
-                    contextMenu.MenuItems[0].Click -= InstallNow_Click;
-                    contextMenu.MenuItems[1].Click -= ViewChanges_Click;
+                    contextMenu.Items[0].Click -= InstallNow_Click;
+                    contextMenu.Items[1].Click -= ViewChanges_Click;
                     break;
 
                 case MenuType.Error:
-                    contextMenu.MenuItems[0].Click -= TryAgainLater_Click;
-                    contextMenu.MenuItems[1].Click -= TryAgainNow_Click;
-                    contextMenu.MenuItems[3].Click -= ViewError_Click;
+                    contextMenu.Items[0].Click -= TryAgainLater_Click;
+                    contextMenu.Items[1].Click -= TryAgainNow_Click;
+                    contextMenu.Items[3].Click -= ViewError_Click;
                     break;
 
                 case MenuType.UpdateSuccessful:
-                    contextMenu.MenuItems[0].Click -= Hide_Click;
-                    contextMenu.MenuItems[1].Click -= ViewChanges_Click;
+                    contextMenu.Items[0].Click -= Hide_Click;
+                    contextMenu.Items[1].Click -= ViewChanges_Click;
                     break;
 
                 case MenuType.AlreadyUpToDate:
-                    contextMenu.MenuItems[0].Click -= Hide_Click;
+                    contextMenu.Items[0].Click -= Hide_Click;
                     break;
             }
 
@@ -1285,56 +1285,49 @@ namespace wyDay.Controls
 
                     break;
                 case MenuType.CheckingMenu:
-                    contextMenu = new ContextMenu(new[] { new MenuItem(translation.StopChecking, CancelUpdate_Click) });
+                    contextMenu = new ContextMenuStrip();
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.StopChecking, null, CancelUpdate_Click));
                     break;
                 case MenuType.CancelDownloading:
-                    contextMenu = new ContextMenu(new[] { new MenuItem(translation.StopDownloading, CancelUpdate_Click) });
+                    contextMenu = new ContextMenuStrip();
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.StopDownloading, null, CancelUpdate_Click));
                     break;
-                case MenuType .CancelExtracting:
-                    contextMenu = new ContextMenu(new[] { new MenuItem(translation.StopExtracting, CancelUpdate_Click) });
+                case MenuType.CancelExtracting:
+                    contextMenu = new ContextMenuStrip();
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.StopExtracting, null, CancelUpdate_Click));
                     break;
                 case MenuType.InstallAndChanges:
                 case MenuType.DownloadAndChanges:
-
-                    contextMenu = new ContextMenu(new[]
-                                { 
-                                    new MenuItem(NewMenuType == MenuType.InstallAndChanges ? translation.InstallUpdateMenu : translation.DownloadUpdateMenu, InstallNow_Click), 
-                                    new MenuItem(translation.ViewChangesMenu.Replace("%version%", Version), ViewChanges_Click)
-                                });
-                    contextMenu.MenuItems[0].DefaultItem = true;
+                    contextMenu = new ContextMenuStrip();
+                    var installOrDownloadItem = new ToolStripMenuItem(NewMenuType == MenuType.InstallAndChanges ? translation.InstallUpdateMenu : translation.DownloadUpdateMenu, null, InstallNow_Click);
+                    contextMenu.Items.Add(installOrDownloadItem);
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.ViewChangesMenu.Replace("%version%", Version), null, ViewChanges_Click));
                     ShowButtonUpdateNow = true;
 
                     break;
                 case MenuType.Error:
 
-                    contextMenu = new ContextMenu(new[]
-                                { 
-                                    new MenuItem(translation.TryAgainLater, TryAgainLater_Click), 
-                                    new MenuItem(translation.TryAgainNow, TryAgainNow_Click),
-                                    new MenuItem("-"),
-                                    new MenuItem(translation.ViewError, ViewError_Click)
-                                });
-                    contextMenu.MenuItems[0].DefaultItem = true;
+                    contextMenu = new ContextMenuStrip();
+                    var tryAgainLaterItem = new ToolStripMenuItem(translation.TryAgainLater, null, TryAgainLater_Click);
+                    contextMenu.Items.Add(tryAgainLaterItem);
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.TryAgainNow, null, TryAgainNow_Click));
+                    contextMenu.Items.Add(new ToolStripSeparator());
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.ViewError, null, ViewError_Click));
                     
                     break;
                 case MenuType.UpdateSuccessful:
 
-                    contextMenu = new ContextMenu(new[]
-                                {
-                                    new MenuItem(translation.HideMenu, Hide_Click),
-                                    new MenuItem(translation.ViewChangesMenu.Replace("%version%", Version), ViewChanges_Click)
-                                });
-
+                    contextMenu = new ContextMenuStrip();
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.HideMenu, null, Hide_Click));
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.ViewChangesMenu.Replace("%version%", Version), null, ViewChanges_Click));
                     ShowButtonUpdateNow = false;
 
                     break;
 
                 case MenuType.AlreadyUpToDate:
 
-                    contextMenu = new ContextMenu(new[]
-                                {
-                                    new MenuItem(translation.HideMenu, Hide_Click)
-                                });
+                    contextMenu = new ContextMenuStrip();
+                    contextMenu.Items.Add(new ToolStripMenuItem(translation.HideMenu, null, Hide_Click));
                     break;
             }
 

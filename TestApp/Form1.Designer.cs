@@ -1,11 +1,14 @@
-﻿namespace TestApp
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace TestApp
 {
-    partial class Form1
+    partial class Form1 : Form
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -13,7 +16,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing && components != null)
             {
                 components.Dispose();
             }
@@ -28,149 +31,138 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-            this.mnuHelp = new System.Windows.Forms.MenuItem();
-            this.mnuCheckUpdates = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.yourMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cvxcvxcvxcvxcvToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblVersion = new System.Windows.Forms.Label();
-            this.btnRecheckNow = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.automaticUpdater = new wyDay.Controls.AutomaticUpdater();
-            this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.automaticUpdater)).BeginInit();
-            this.SuspendLayout();
+            components = new Container();
+            var resources = new ComponentResourceManager(typeof(Form1));
+            mainMenu1 = new MenuStrip();
+            mnuHelp = new ToolStripMenuItem();
+            mnuCheckUpdates = new ToolStripMenuItem();
+            menuItem1 = new ToolStripSeparator();
+            yourMenuItem = new ToolStripMenuItem();
+            menuItem3 = new ToolStripMenuItem();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            cvxcvxcvxcvxcvToolStripMenuItem = new ToolStripMenuItem();
+            lblVersion = new Label();
+            btnRecheckNow = new Button();
+            textBox1 = new TextBox();
+            automaticUpdater = new wyDay.Controls.AutomaticUpdater();
+
             // 
             // mainMenu1
             // 
-            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.mnuHelp});
+            mainMenu1.Items.AddRange(new ToolStripItem[] { mnuHelp });
+
             // 
             // mnuHelp
             // 
-            this.mnuHelp.Index = 0;
-            this.mnuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.mnuCheckUpdates,
-            this.menuItem1,
-            this.yourMenuItem,
-            this.menuItem3});
-            this.mnuHelp.Text = "Help";
+            mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { mnuCheckUpdates, menuItem1, yourMenuItem, menuItem3 });
+            mnuHelp.Text = "Help";
+
             // 
             // mnuCheckUpdates
             // 
-            this.mnuCheckUpdates.Index = 0;
-            this.mnuCheckUpdates.Text = " ";
+            mnuCheckUpdates.Text = "Check for Updates";
+
             // 
             // menuItem1
             // 
-            this.menuItem1.Index = 1;
-            this.menuItem1.Text = "-";
+            // Separator does not need Text, it acts as a visual separator.
+
             // 
             // yourMenuItem
             // 
-            this.yourMenuItem.Index = 2;
-            this.yourMenuItem.Text = "Online &Help";
+            yourMenuItem.Text = "Online Help";
+
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 3;
-            this.menuItem3.Text = "&About";
+            menuItem3.Text = "About";
+
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cvxcvxcvxcvxcvToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(155, 26);
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { cvxcvxcvxcvxcvToolStripMenuItem });
+
             // 
             // cvxcvxcvxcvxcvToolStripMenuItem
             // 
-            this.cvxcvxcvxcvxcvToolStripMenuItem.Name = "cvxcvxcvxcvxcvToolStripMenuItem";
-            this.cvxcvxcvxcvxcvToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.cvxcvxcvxcvxcvToolStripMenuItem.Text = "cvxcvxcvxcvxcv";
+            cvxcvxcvxcvxcvToolStripMenuItem.Text = "Context Menu Item";
+
             // 
             // lblVersion
             // 
-            this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(12, 15);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(60, 13);
-            this.lblVersion.TabIndex = 4;
-            this.lblVersion.Text = "Version 1.1";
+            lblVersion.AutoSize = true;
+            lblVersion.Location = new System.Drawing.Point(12, 15);
+            lblVersion.Text = "Version 1.1";
+
             // 
             // btnRecheckNow
             // 
-            this.btnRecheckNow.Location = new System.Drawing.Point(275, 70);
-            this.btnRecheckNow.Name = "btnRecheckNow";
-            this.btnRecheckNow.Size = new System.Drawing.Size(108, 24);
-            this.btnRecheckNow.TabIndex = 5;
-            this.btnRecheckNow.Text = "Recheck now";
-            this.btnRecheckNow.UseVisualStyleBackColor = true;
-            this.btnRecheckNow.Click += new System.EventHandler(this.button1_Click);
+            btnRecheckNow.Location = new System.Drawing.Point(275, 70);
+            btnRecheckNow.Size = new System.Drawing.Size(108, 24);
+            btnRecheckNow.Text = "Recheck Now";
+            btnRecheckNow.UseVisualStyleBackColor = true;
+            btnRecheckNow.Click += BtnRecheckNow_Click;
+
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 48);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(244, 98);
-            this.textBox1.TabIndex = 6;
+            textBox1.Location = new System.Drawing.Point(12, 48);
+            textBox1.Multiline = true;
+            textBox1.Size = new System.Drawing.Size(244, 98);
+
             // 
             // automaticUpdater
             // 
-            this.automaticUpdater.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.automaticUpdater.Arguments = "-applesauce=\"C:\\Windows\\Program Files\\File.exe\" -chinese";
-            this.automaticUpdater.ContainerForm = this;
-            this.automaticUpdater.GUID = "8b43fb52-1ebb-4cfa-a387-e83afa5afef3";
-            this.automaticUpdater.Location = new System.Drawing.Point(367, 12);
-            this.automaticUpdater.MenuItem = this.mnuCheckUpdates;
-            this.automaticUpdater.Name = "automaticUpdater";
-            this.automaticUpdater.Size = new System.Drawing.Size(16, 16);
-            this.automaticUpdater.TabIndex = 3;
-            this.automaticUpdater.UpdateType = wyDay.Controls.UpdateType.DoNothing;
-            this.automaticUpdater.wyUpdateCommandline = resources.GetString("automaticUpdater.wyUpdateCommandline");
-            this.automaticUpdater.ClosingAborted += new System.EventHandler(this.automaticUpdater_ClosingAborted);
+            automaticUpdater.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            automaticUpdater.GUID = "8b43fb52-1ebb-4cfa-a387-e83afa5afef3";
+            automaticUpdater.Location = new System.Drawing.Point(367, 12);
+            automaticUpdater.MenuItem = mnuCheckUpdates;
+            automaticUpdater.UpdateType = wyDay.Controls.UpdateType.DoNothing;
+            automaticUpdater.ClosingAborted += AutomaticUpdater_ClosingAborted;
+
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(395, 173);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.automaticUpdater);
-            this.Controls.Add(this.lblVersion);
-            this.Controls.Add(this.btnRecheckNow);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Menu = this.mainMenu1;
-            this.Name = "Form1";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "YourApp";
-            this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.automaticUpdater)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(395, 173);
+            Controls.Add(mainMenu1); // Ensure MenuStrip is added to Controls
+            Controls.Add(textBox1);
+            Controls.Add(automaticUpdater);
+            Controls.Add(lblVersion);
+            Controls.Add(btnRecheckNow);
+            MainMenuStrip = mainMenu1; // Set MainMenuStrip property
+            Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "YourApp";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
-        #endregion
 
+        #endregion
+        private void BtnRecheckNow_Click(object sender, System.EventArgs e)
+        {
+            MessageBox.Show("Rechecking now...");
+        }
+
+        private void AutomaticUpdater_ClosingAborted(object sender, System.EventArgs e)
+        {
+            MessageBox.Show("Update aborted.");
+        }
+
+        private MenuStrip mainMenu1;
+        private ToolStripMenuItem mnuHelp;
+        private ToolStripMenuItem mnuCheckUpdates;
+        private ToolStripSeparator menuItem1;
+        private ToolStripMenuItem yourMenuItem;
+        private ToolStripMenuItem menuItem3;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem cvxcvxcvxcvxcvToolStripMenuItem;
+        private Label lblVersion;
+        private Button btnRecheckNow;
+        private TextBox textBox1;
         private wyDay.Controls.AutomaticUpdater automaticUpdater;
-        private System.Windows.Forms.MainMenu mainMenu1;
-        private System.Windows.Forms.MenuItem mnuHelp;
-        private System.Windows.Forms.MenuItem mnuCheckUpdates;
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem yourMenuItem;
-        private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem cvxcvxcvxcvxcvToolStripMenuItem;
-        private System.Windows.Forms.Label lblVersion;
-        private System.Windows.Forms.Button btnRecheckNow;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

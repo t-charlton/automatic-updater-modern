@@ -1075,7 +1075,7 @@ namespace wyDay.Controls
 
         void ViewChanges_Click(object sender, EventArgs e)
         {
-            using (frmChanges changeForm = new frmChanges(auBackend.Version, auBackend.RawChanges, auBackend.AreChangesRTF, ShowButtonUpdateNow, translation))
+            using (frmChanges changeForm = new(auBackend.Version, auBackend.RawChanges, auBackend.AreChangesRTF, ShowButtonUpdateNow, translation))
             {
                 changeForm.ShowDialog();
 
@@ -1086,7 +1086,7 @@ namespace wyDay.Controls
 
         void ViewError_Click(object sender, EventArgs e)
         {
-            using (frmError errorForm = new frmError(failArgs, translation))
+            using (frmError errorForm = new(failArgs, translation))
             {
                 errorForm.ShowDialog();
 

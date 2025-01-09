@@ -8,11 +8,11 @@ namespace WindowsService
 {
     class WindowsService : ServiceBase
     {
-        //Note: to install this service, simply call:
-        // %SystemRoot%\Microsoft.NET\Framework\v2.0.50727\InstallUtil /i WindowsService.exe
+        //Note: To install this service, use PowerShell with the following commands:
+        // New-Service -Name "WindowsService" -BinaryPathName "Path\To\WindowsService.exe" -DisplayName "Test AutoUpdate Service"
 
-        //To uninstall simply call:
-        // %SystemRoot%\Microsoft.NET\Framework\v2.0.50727\InstallUtil /u WindowsService.exe
+        // To uninstall, use:
+        // Remove-Service -Name "WindowsService"
 
         /// <summary>
         /// Public Constructor for WindowsService.
@@ -23,7 +23,7 @@ namespace WindowsService
             ServiceName = "Test AutoUpdate Service";
             EventLog.Source = "Test AutoUpdate Service";
             EventLog.Log = "Application";
-            
+
             // These Flags set whether or not to handle that specific
             //  type of event. Set to true if you need it, false otherwise.
             CanHandlePowerEvent = true;
@@ -41,6 +41,8 @@ namespace WindowsService
         /// </summary>
         static void Main()
         {
+            // Attach a debugger during development if needed
+            DebugMode();
             Run(new WindowsService());
         }
 
@@ -60,7 +62,8 @@ namespace WindowsService
 
         static void WriteToLog(string message, bool append)
         {
-            using (StreamWriter outfile = new StreamWriter(@"C:\NETWinService.txt", append))
+            string logPath = Path.Combine(AppContext.BaseDirectory, "NETWinService.txt");
+            using (StreamWriter outfile = new StreamWriter(logPath, append))
             {
                 outfile.WriteLine(message);
             }
@@ -76,21 +79,21 @@ namespace WindowsService
             WriteToLog(".NET Windows Service v1", false);
 
             auBackend = new AutomaticUpdaterBackend
-                            {
+            {
                                 //TODO: set a unique string.
                                 // For instance, "appname-companyname"
-                                GUID = "a-string-that-uniquely-IDs-your-service",
+                GUID = "a-string-that-uniquely-IDs-your-service",
 
                                 // With UpdateType set to Automatic, you're still in
                                 // charge of checking for updates, but the
                                 // AutomaticUpdaterBackend continues with the
                                 // downloading and extracting automatically.
-                                UpdateType = UpdateType.Automatic,
+                UpdateType = UpdateType.Automatic,
 
                                 // We set the service name that will be used by wyUpdate
                                 // to restart this service on update success or failure.
-                                ServiceName = this.ServiceName
-                            };
+                ServiceName = this.ServiceName
+            };
 
             auBackend.ReadyToBeInstalled += auBackend_ReadyToBeInstalled;
             auBackend.UpdateSuccessful += auBackend_UpdateSuccessful;
@@ -121,9 +124,8 @@ namespace WindowsService
         {
             // Only ForceCheckForUpdate() every N days!
             // You don't want to recheck for updates on every app start.
-
-            if ((DateTime.Now - auBackend.LastCheckDate).TotalDays > 10
-                && auBackend.UpdateStepOn == UpdateStepOn.Nothing)
+            if ((DateTime.Now - auBackend.LastCheckDate).TotalDays > 10 &&
+                auBackend.UpdateStepOn == UpdateStepOn.Nothing)
             {
                 auBackend.ForceCheckForUpdate();
             }
@@ -132,7 +134,7 @@ namespace WindowsService
         static void auBackend_UpdateFailed(object sender, FailArgs e)
         {
             //TODO: Notify the admin, or however you want to handle the failure
-            WriteToLog("Update failed. Reason\r\nTitle: " + e.ErrorTitle + "\r\nMessage: " + e.ErrorMessage, true);
+            WriteToLog($"Update failed.\r\nTitle: {e.ErrorTitle}\r\nMessage: {e.ErrorMessage}", true);
         }
 
         static void auBackend_UpToDate(object sender, SuccessArgs e)
@@ -142,8 +144,8 @@ namespace WindowsService
 
         static void auBackend_UpdateSuccessful(object sender, SuccessArgs e)
         {
-            WriteToLog("Successfully updated to version " + e.Version, true);
-            WriteToLog("Changes: ", true);
+            WriteToLog($"Successfully updated to version {e.Version}", true);
+            WriteToLog("Changes:", true);
             WriteToLog(auBackend.Changes, true);
         }
 
